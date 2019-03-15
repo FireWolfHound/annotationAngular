@@ -38,32 +38,38 @@ function highlightText() {
 
 
 function splitingText() {
+	// on extrait le contenu du paragraph en string
 	var myText = document.getElementById("annotation").textContent;
 	endText = myText.length
 
+	// Création du tableau qui découpe le texte en fonction des spans
 	var arrTextNode = []
 	var ancienSpanEnd = 0;
 
+	//Insétion des valeurs dans la table
 	locationAllSpan.forEach((span) => {
 		arrTextNode.push(myText.slice(ancienSpanEnd, span.start))
 		arrTextNode.push(myText.slice(span.start, span.end))
 		ancienSpanEnd = span.end
 	});
-	
+	//on termine le tableau
 	arrTextNode.push(myText.slice(ancienSpanEnd, endText));
 
-	console.log(arrTextNode);
-	
+	// Création de la variable qui va contenir le texte en entier avec les balises span
 	var newText = "";
+	var color = "";
+
+	console.log(arrTextNode);
+	console.log(locationAllSpan);
+
 
 	for (let i = 0; i < arrTextNode.length; i++) {
-
-		if (i%2) {
-			var text = '<span style="background-color: yellow">' + arrTextNode[i] + '</span>'
-			newText += text
-		}else{
-			var span = arrTextNode[i]
+		 if (i % 2) {
+			var span = '<span style="background-color:' + color + '">' + arrTextNode[i] + '</span>'
 			newText += span
+		} else {
+			var text = arrTextNode[i]
+			newText += text
 		}
 	}
 
