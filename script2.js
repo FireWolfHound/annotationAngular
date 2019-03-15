@@ -1,33 +1,59 @@
-function selectBetweenTwoElements(element1, element2) {
-	if (window.getSelection) {
-			/* all browsers, except IE 8 and IE 7 */
-			var selection = window.getSelection();
-			selection.removeAllRanges();
-			var range = document.createRange();
-			range.setStart(element1, 0);
-			range.setEnd(element2, 1);
-			selection.addRange(range);
-	} else {
-			/* works fine in IE 8 / IE 7 */
-			if (document.body.createControlRange) {
-					var range1 = document.body.createTextRange();
-					range1.moveToElementText(element1);
+function splitingText() {
+	var myText = document.getElementById("annotation").textContent;
+	endText = myText.length
 
-					var range2 = document.body.createTextRange();
-					range2.moveToElementText(element2);
+	var arrTextNode = []
+	var arrTextBeforeNode = []
+	var arrTextAfterNode = []
+	var ancienSpanEnd = 0;
 
-					var range = document.body.createTextRange();
-					range.setEndPoint("StartToStart", range1);
-					range.setEndPoint("EndToEnd", range2);
-					range.select();
-			}
+	locationAllSpan.forEach((span) => {
+		arrTextBeforeNode.push(myText.slice(0, span.start))
+		arrTextNode.push(myText.slice(span.start, span.end))
+		ancienSpanEnd = span.end
+		arrTextAfterNode.push(myText.slice(ancienSpanEnd, endText));
+	});
+
+
+	// document.getElementById("annotation").firstChild.data = arrTextBeforeNode[0]
+	// document.getElementById("annotation").lastChild.data = arrTextAfterNode[0]
+
+	console.log(document.getElementById("annotation"));
+	
+
+
+	var reinitialiseSpan = 0;
+	var endOffsetValue = 2;
+	var ancienSpanEnd = 0;
+
+	for (let i = 0; i < arrTextNode.length; i++) {
+
+		reinitialiseSpan = locationAllSpan[i].start - ancienSpanEnd;
+
+		var textBeforeNode = document.createTextNode(arrTextBeforeNode[i]);
+		var range = document.createRange();
+		range.setStart(textBeforeNode, locationAllSpan[i].start);
+		console.log(range);
+
+		range.setEnd(document.getElementById("annotation"), reinitialiseSpan)
+		console.log(range);
+
+		var b = range.createContextualFragment(arrTextBeforeNode[i]);
+		console.log(b);
+		console.log(range);
+
+		var textnode = document.createTextNode(arrTextNode[i]);
+
+
+		var span = document.createElement("span");
+		span.appendChild(b);
+		range.insertNode(span)
+
+		ancienSpanEnd = locationAllSpan[i].end
+		endOffsetValue +=2
+		console.log(endOffsetValue);
+		
+
 	}
+
 }
-var p4 = document.getElementById("annotation");
-var a = p4.textContent
-var b = a.charAt(10)
-console.log(p4);
-
-var p5 = document.getElementById("annotation");
-
-selectBetweenTwoElements(p4,p5)

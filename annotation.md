@@ -9,3 +9,6 @@ startIndex sup span.endIndex ou inf span.startIndex
 endIndex sup span.endIndex ou inf span.startIndex
 
 on ne doit pas etre sup à span.start et inf à span.end 
+
+besoin du start et end de locationAllSpan
+besoin du texte dans tableTmp
