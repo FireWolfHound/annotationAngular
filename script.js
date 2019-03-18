@@ -21,18 +21,18 @@ function highlightText() {
 
 	if (isOk) {
 		// Ajout de l'objet dans le tableau
-		locationAllSpan.push(currPosition);
+		if (currPosition.start != currPosition.end) {
+			locationAllSpan.push(currPosition);
 
-		//on crée la balise span
-		createSpan(currPosition)
-		sortTable();
-
-		console.log(locationAllSpan);
-
-		localStorage.setItem('table', JSON.stringify(locationAllSpan))
-
+			//on crée la balise span
+			createSpan(currPosition)
+			sortTable();
+	
+			localStorage.setItem('table', JSON.stringify(locationAllSpan))
+			
+		}
 	} else {
-		console.log('Déja dans le surlignement');
+		alert('Selection invalide');
 	}
 }
 
@@ -45,35 +45,42 @@ function splitingText() {
 	// Création du tableau qui découpe le texte en fonction des spans
 	var arrTextNode = []
 	var ancienSpanEnd = 0;
+	// On crée l'objet qui contiendra les information de la span
+	var contentSpan = {}
 
 	//Insétion des valeurs dans la table
 	locationAllSpan.forEach((span) => {
-		arrTextNode.push(myText.slice(ancienSpanEnd, span.start))
-		arrTextNode.push(myText.slice(span.start, span.end))
+		contentSpan = {
+			text: myText.slice(ancienSpanEnd, span.start)
+		}
+		arrTextNode.push(contentSpan)
+		contentSpan = {
+			text: myText.slice(span.start, span.end),
+			color: span.colorSpan
+		}
+		arrTextNode.push(contentSpan)
 		ancienSpanEnd = span.end
 	});
 	//on termine le tableau
-	arrTextNode.push(myText.slice(ancienSpanEnd, endText));
+	contentSpan = {
+		text: myText.slice(ancienSpanEnd, endText)
+	}
+	arrTextNode.push(contentSpan);
 
 	// Création de la variable qui va contenir le texte en entier avec les balises span
 	var newText = "";
-	var color = "";
-
-	console.log(arrTextNode);
-	console.log(locationAllSpan);
-
 
 	for (let i = 0; i < arrTextNode.length; i++) {
-		 if (i % 2) {
-			var span = '<span style="background-color:' + color + '">' + arrTextNode[i] + '</span>'
+
+		if (i % 2) {
+			var span = '<span style="background-color:' + arrTextNode[i].color + '">' + arrTextNode[i].text + '</span>'
 			newText += span
 		} else {
-			var text = arrTextNode[i]
+			var text = arrTextNode[i].text
 			newText += text
 		}
 	}
 
-	console.log(newText);
 	document.getElementById("annotation").innerHTML = newText
 }
 
@@ -82,8 +89,6 @@ function createSpan(currPosition) {
 	var selectedText = selection.extractContents();
 	var span = document.createElement("span");
 	span.style.backgroundColor = currPosition.colorSpan;
-	span.setAttribute("PosStart", currPosition.start);
-	span.setAttribute("PosEnd", currPosition.end);
 	span.appendChild(selectedText);
 	selection.insertNode(span);
 
@@ -118,11 +123,35 @@ function sortTable() {
 }
 
 function getRandomColor() {
-	var letters = '0123456789ABCDEF';
-	var color = '#';
-	for (var i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
+	var max = 6
+	var min = 0
+	var color = ""
+	var numberAle = Math.floor(Math.random() * (max - min +1)) + min
+
+	switch (numberAle) {
+		case 0:
+			color = '#c7fcbc'
+			break;
+		case 1:
+			color = '#bcdffc'
+			break;
+		case 2:
+			color = '#f8f89b'
+			break;
+		case 3:
+			color = '#fcbcfa'
+			break;
+		case 4:
+			color = '#bcfcf7'
+			break;
+		case 5:
+			color = '#fcbcbc'
+			break;
+
+		default:
+			break;
 	}
+
 	return color;
 }
 

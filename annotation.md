@@ -12,3 +12,10 @@ on ne doit pas etre sup à span.start et inf à span.end
 
 besoin du start et end de locationAllSpan
 besoin du texte dans tableTmp
+
+green: #c7fcbc
+blue: #bcdffc
+Yellow: #f8f89b
+pink: #fcbcfa
+aqua: #bcfcf7
+red: #fcbcbc
